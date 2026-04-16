@@ -1,0 +1,235 @@
+{
+  "info": {
+    "_postman_id": "6068e1ca-37f0-45af-bb99-faf70d1e5945",
+    "name": "booking-service-api",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "30028846"
+  },
+  "item": [
+    {
+      "name": "Create New Customer",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"name\": \"testtest\",\r\n  \"email\": \"testtest@gmail.com\",\r\n  \"mobile_no\": \"018214123\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8081/booking-service/customer",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8081",
+          "path": [
+            "booking-service",
+            "customer"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get Customer",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8081/booking-service/customer?name=tes",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8081",
+          "path": [
+            "booking-service",
+            "customer"
+          ],
+          "query": [
+            {
+              "key": "name",
+              "value": "tes"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Create New Event",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"event_title\": \"test title\",\r\n    \"event_venue\": \"jakarta\",\r\n    \"event_type\": \"concert\",\r\n    \"start_date\": \"2026-04-16T12:13:41.617Z\",\r\n    \"end_date\": \"2026-04-16T12:13:41.617Z\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8081/booking-service/event",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8081",
+          "path": [
+            "booking-service",
+            "event"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get Event",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8081/booking-service/event?event_date=17-04-2026&event_title=test&event_type=test",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8081",
+          "path": [
+            "booking-service",
+            "event"
+          ],
+          "query": [
+            {
+              "key": "event_date",
+              "value": "17-04-2026",
+              "type": "text"
+            },
+            {
+              "key": "event_title",
+              "value": "test",
+              "type": "text"
+            },
+            {
+              "key": "event_type",
+              "value": "test",
+              "type": "text"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get Event Seat",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8081/booking-service/event/1/seat",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8081",
+          "path": [
+            "booking-service",
+            "event",
+            "1",
+            "seat"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Create New Seat",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"event_seat_type\": \"type10\",\r\n  \"total_seat\": 20,\r\n  \"price\": 0\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8081/booking-service/event/1/seat",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8081",
+          "path": [
+            "booking-service",
+            "event",
+            "1",
+            "seat"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Create New Booking",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"customer_id\": 1,\r\n  \"event_seat\": [\r\n    {\r\n      \"event_seat_id\": 7,\r\n      \"qty\": 1\r\n    }\r\n  ],\r\n  \"total_amount\": 100000\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8081/booking-service/booking",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8081",
+          "path": [
+            "booking-service",
+            "booking"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Cancel Booking",
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8081/booking-service/booking/1/cancel",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8081",
+          "path": [
+            "booking-service",
+            "booking",
+            "1",
+            "cancel"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}
