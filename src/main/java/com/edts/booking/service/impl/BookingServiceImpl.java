@@ -1,6 +1,7 @@
 package com.edts.booking.service.impl;
 
 import com.edts.booking.exception.BadRequestException;
+import com.edts.booking.exception.BookingException;
 import com.edts.booking.exception.NotFoundException;
 import com.edts.booking.model.dto.request.AddNewBooking;
 import com.edts.booking.model.dto.request.BookingEventSeat;
@@ -18,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -59,10 +61,15 @@ public class BookingServiceImpl implements BookingService {
             EventSeatEntity eventSeatEntity = eventService.getEventSeat(bookingEventSeat.eventSeatId());
             bookingDetailEntity.setEventSeatEntity(eventSeatEntity);
             bookingDetailEntity.setQty(bookingEventSeat.qty());
-            bookingDetailEntity.setPrice(eventSeatEntity.getPrice());
+            BigDecimal totalPrice = eventSeatEntity.getPrice().multiply(BigDecimal.valueOf(bookingEventSeat.qty()));
+            bookingDetailEntity.setPrice(totalPrice);
             bookingDetailEntity.setBooking(bookingEntity);
             bookingDetailEntity.setCreatedBy("SYSTEM");
             bookingDetailRepository.save(bookingDetailEntity);
+            int bookingResult = eventService.bookSeat(eventSeatEntity.getEventSeatId(), bookingEventSeat.qty());
+            if (bookingResult == 0) {
+                throw new BookingException("Seats are sold out");
+            }
         }
     }
 
@@ -97,7 +104,7 @@ public class BookingServiceImpl implements BookingService {
             EventSeatEntity eventSeatEntity = eventSeatMappedById.get(bookingEventSeat.eventSeatId());
 
             if (eventSeatEntity.getBookedCount().equals(eventSeatEntity.getTotalSeat())){
-                String errMsg = "all seat already booked for event " + eventSeatEntity.getEvent().getEventTitle();
+                String errMsg = "seat already booked for event " + eventSeatEntity.getEvent().getEventTitle();
                 throw new BadRequestException(errMsg);
             }
 
@@ -127,13 +134,23 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
+    @Transactional
     public void cancel(Long bookingId) {
         BookingEntity bookingEntity = bookingRepository.getReferenceById(bookingId);
         if (bookingEntity.getBookingId() == null) {
             log.error("no booking with ID {} found!", bookingId);
             throw new BadRequestException("booking ID not found");
         }
+        BookingDetailEntity bookingDetailEntity = bookingDetailRepository.findByBooking_BookingId(bookingId);
+        EventSeatEntity eventSeatEntity = bookingDetailEntity.getEventSeatEntity();
         bookingEntity.setStatus("CANCEL");
+        int decreaseBookedCount = eventSeatEntity.getBookedCount() - bookingDetailEntity.getQty();
+        eventSeatEntity.setBookedCount(decreaseBookedCount);
+        eventSeatEntity.setModifiedBy("SYSTEM");
+        bookingEntity.setModifiedBy("SYSTEM");
+        bookingEntity.setModifiedAt(LocalDateTime.now());
+        eventSeatEntity.setModifiedAt(LocalDateTime.now());
+        eventSeatRepository.save(eventSeatEntity);
         bookingRepository.save(bookingEntity);
     }
 

@@ -1,6 +1,7 @@
 package com.edts.booking.controller;
 
 import com.edts.booking.model.dto.request.AddNewCustomer;
+import com.edts.booking.model.dto.response.CustomerResponse;
 import com.edts.booking.model.entity.CustomerEntity;
 import com.edts.booking.service.CustomerService;
 import jakarta.validation.Valid;
@@ -33,7 +34,7 @@ public class CustomerController {
 
     @GetMapping
     public ResponseEntity<?> getCustomer(@RequestParam(name = "name", required = false) String name){
-        List<CustomerEntity> result = customerService.getCustomer(name);
+        List<CustomerResponse> result = customerService.getCustomer(name);
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 }

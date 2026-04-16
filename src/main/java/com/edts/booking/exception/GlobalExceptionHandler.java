@@ -35,5 +35,12 @@ public class GlobalExceptionHandler {
         return new DefaultResponse(errors.get(0));
     }
 
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public DefaultResponse handleBookingException(BookingException ex){
+        return new DefaultResponse(ex.getMessage());
+    }
+
+
 
 }

@@ -1,4 +1,4 @@
-package com.edts.booking_service;
+package com.edts.booking;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

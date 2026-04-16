@@ -3,6 +3,7 @@ package com.edts.booking.service.impl;
 import com.edts.booking.exception.BadRequestException;
 import com.edts.booking.exception.NotFoundException;
 import com.edts.booking.model.dto.request.AddNewCustomer;
+import com.edts.booking.model.dto.response.CustomerResponse;
 import com.edts.booking.model.entity.CustomerEntity;
 import com.edts.booking.repositories.CustomerRepository;
 import com.edts.booking.service.CustomerService;
@@ -36,6 +37,7 @@ public class CustomerServiceImpl implements CustomerService {
             customerEntity.setCustomerEmail(request.email().trim());
             customerEntity.setCustomerName(request.name().trim());
             customerEntity.setCustomerMobileNo(request.mobileNo().trim());
+            customerEntity.setCreatedBy("SYSTEM");
             customerRepository.save(customerEntity);
         } catch (Exception ex) {
             throw new BadRequestException("failed creating new customer");
@@ -49,8 +51,16 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public List<CustomerEntity> getCustomer(String name) {
-        return customerRepository.findByCustomerName(name);
+    public List<CustomerResponse> getCustomer(String name) {
+        String searchName = (name == null) ? null : "%" + name.toLowerCase() + "%";
+        List<CustomerEntity> result = customerRepository.findByCustomerName(searchName);
+        return result.stream().map(customerEntity ->
+            new CustomerResponse(
+                    customerEntity.getCustomerId(),
+                    customerEntity.getCustomerEmail(),
+                    customerEntity.getCustomerName(),
+                    customerEntity.getCustomerMobileNo())
+        ).toList();
     }
 
 }

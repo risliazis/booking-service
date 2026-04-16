@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface BookingDetailRepository extends JpaRepository<BookingDetailEntity, Long> {
+    BookingDetailEntity findByBooking_BookingId(Long bookingId);
 }

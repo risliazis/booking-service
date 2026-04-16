@@ -13,7 +13,7 @@ public interface CustomerRepository extends JpaRepository<CustomerEntity, Long> 
     boolean existsByCustomerMobileNo(String customerMobileNo);
 
     @Query("""
-    SELECT c FROM CustomerEntity c where (:name IS NULL OR LOWER(c.customerName) LIKE LOWER(concat('%', :name, '%')))
+    SELECT c FROM CustomerEntity c WHERE :name IS NULL OR LOWER(c.customerName) LIKE :name
 """)
     List<CustomerEntity> findByCustomerName(@Param("name") String customerName);
 }
