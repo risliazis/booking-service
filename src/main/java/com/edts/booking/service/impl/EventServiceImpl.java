@@ -90,9 +90,7 @@ public class EventServiceImpl implements EventService {
                 entity.getEventSeatId(),
                 entity.getEventSeatType(),
                 entity.getPrice(),
-                entity.getBookedCount(),
-                entity.getTotalSeat(),
-                entity.getBookedCount().equals(entity.getTotalSeat()) ? "Sold Out" : "Available"
+                entity.getTotalSeat() - entity.getBookedCount()
         )).toList();
     }
 

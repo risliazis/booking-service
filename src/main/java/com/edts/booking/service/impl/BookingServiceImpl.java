@@ -103,6 +103,10 @@ public class BookingServiceImpl implements BookingService {
         for (BookingEventSeat bookingEventSeat : request.eventSeat()){
             EventSeatEntity eventSeatEntity = eventSeatMappedById.get(bookingEventSeat.eventSeatId());
 
+            if (eventSeatEntity == null){
+                throw new BadRequestException("no available event seat for event seat ID: " + bookingEventSeat.eventSeatId());
+            }
+
             if (eventSeatEntity.getBookedCount().equals(eventSeatEntity.getTotalSeat())){
                 String errMsg = "seat already booked for event " + eventSeatEntity.getEvent().getEventTitle();
                 throw new BadRequestException(errMsg);
@@ -110,7 +114,7 @@ public class BookingServiceImpl implements BookingService {
 
             if ((eventSeatEntity.getBookedCount() + bookingEventSeat.qty()) > eventSeatEntity.getTotalSeat()){
                 int availableSeats = eventSeatEntity.getTotalSeat() - eventSeatEntity.getBookedCount();
-                String errMsg = "failed booking for event " + eventSeatEntity.getEvent().getEventTitle() + " , seat available: " + availableSeats;
+                String errMsg = "failed booking for event " + eventSeatEntity.getEvent().getEventTitle() + ", seat available: " + availableSeats;
                 throw new BadRequestException(errMsg);
             }
             totalAmountCalculated = totalAmountCalculated.add(eventSeatEntity.getPrice().multiply(BigDecimal.valueOf(bookingEventSeat.qty())));
@@ -128,7 +132,7 @@ public class BookingServiceImpl implements BookingService {
 
         //check payment
         if (totalAmountCalculated.compareTo(request.totalAmount()) != 0){
-            throw new BadRequestException("total payment is wrong");
+            throw new BadRequestException("total payment must be " + totalAmountCalculated);
         }
 
     }

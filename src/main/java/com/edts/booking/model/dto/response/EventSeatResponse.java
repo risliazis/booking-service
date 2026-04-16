@@ -10,7 +10,5 @@ public record EventSeatResponse(
         Long id,
         String seatType,
         BigDecimal price,
-        Integer bookedCount,
-        Integer totalSeat,
-        String status) {
+        Integer availableSeat) {
 }
