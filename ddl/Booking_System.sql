@@ -1,0 +1,56 @@
+CREATE TABLE CUSTOMER (
+                          CUSTOMER_ID BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+                          CUSTOMER_NAME VARCHAR(50) NOT NULL,
+                          CUSTOMER_EMAIL VARCHAR(100),
+                          CUSTOMER_MOBILE_NO VARCHAR(15) UNIQUE NOT NULL,
+                          CREATED_AT TIMESTAMP DEFAULT NOW(),
+                          MODIFIED_AT TIMESTAMP,
+                          CREATED_BY VARCHAR(50),
+                          MODIFIED_BY VARCHAR(50)
+);
+/
+CREATE TABLE EVENT (
+                       EVENT_ID BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+                       EVENT_TITLE VARCHAR(50) NOT NULL,
+                       EVENT_VENUE VARCHAR(100),
+                       EVENT_TYPE VARCHAR(25),
+                       START_DATE TIMESTAMP WITH TIME ZONE,
+                       END_DATE TIMESTAMP WITH TIME ZONE,
+                       CREATED_AT TIMESTAMP DEFAULT NOW(),
+                       MODIFIED_AT TIMESTAMP,
+                       CREATED_BY VARCHAR(50),
+                       MODIFIED_BY VARCHAR(50)
+);
+/
+CREATE TABLE EVENT_SEAT (
+                            EVENT_SEAT_ID BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+                            EVENT_ID BIGINT NOT NULL REFERENCES EVENT(EVENT_ID),
+                            EVENT_SEAT_TYPE VARCHAR(15) NOT NULL,
+                            TOTAL_SEAT INTEGER NOT NULL,
+                            BOOKED_COUNT INTEGER NOT NULL,
+                            PRICE NUMERIC(15,0) NOT NULL,
+                            CREATED_AT TIMESTAMP DEFAULT NOW(),
+                            MODIFIED_AT TIMESTAMP,
+                            CREATED_BY VARCHAR(50),
+                            MODIFIED_BY VARCHAR(50)
+);
+/
+CREATE TABLE BOOKING (
+                         BOOKING_ID BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+                         CUSTOMER_ID BIGINT NOT NULL REFERENCES CUSTOMER(CUSTOMER_ID),
+                         STATUS VARCHAR(15) NOT NULL,
+                         TOTAL_AMOUNT NUMERIC(15,0) NOT NULL,
+                         CREATED_AT TIMESTAMP DEFAULT NOW(),
+                         MODIFIED_AT TIMESTAMP,
+                         CREATED_BY VARCHAR(50),
+                         MODIFIED_BY VARCHAR(50)
+);
+/
+CREATE_TABLE BOOKING_DETAIL (
+	BOOKING_DETAIL_ID BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+	BOOKING_ID BIGINT NOT NULL REFERENCES BOOKING(BOOKING_ID),
+	EVENT_SEAT_ID BIGINT NOT NULL REFERENCES EVENT_SEAT(EVENT_SEAT_ID),
+	PRICE NUMERIC(15,0) NOT NULL,
+	QUANTITY INTEGER NOT NULL,
+	CONSTRAINT UQ_BOOKING_SEAT UNIQUE(BOOKING_ID, EVENT_SEAT_ID)
+);
